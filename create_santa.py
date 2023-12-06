@@ -6,6 +6,8 @@ import random
 NoneType = type(None)
 Santa = Dict[str, str]
 
+REMOVE = ['xx', 'yy']
+
 
 with open("participants.json") as f:
     _participants = json.load(f)
@@ -14,6 +16,16 @@ with open("participants.json") as f:
 
 with open("exceptions.json") as f:
     _exceptions = json.load(f)
+
+for name in REMOVE:
+    try:
+        PARTCIPANTS.remove(name)
+    except ValueError:
+        pass
+    try:
+        del _participants[name]
+    except KeyError:
+        pass
 
 
 EXCEPTIONS = {}

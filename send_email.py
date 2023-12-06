@@ -17,18 +17,22 @@ with open('email_login.json') as f:
     LOGIN = json.load(f)
 
 
+with open('meta_data.json') as f:
+    META_DATA = json.load(f)
+
+
 def send_email(receiver: str, message: str) -> NoneType:
     msgRoot = MIMEMultipart('related')
-    msgRoot['From'] = 'Mère Noël \U0001f936'
+    msgRoot['From'] = META_DATA['from'] + ' \U0001f936'
     msgRoot['To'] = receiver
     msgRoot['Subject'] = (
-        "\U0001f384 \u2744\uFE0F \u26C4 "
-        "Secret santa avenue de Saint-Mandé \u26C4 \u2744\uFE0F \U0001f384")
+        "\U0001f384 \u2744\uFE0F \u26C4 " + META_DATA['subject'] + " \u26C4 \u2744\uFE0F \U0001f384"
+    )
 
     msgText = MIMEText(message, 'html')
     msgRoot.attach(msgText)
 
-    with open('maman_noel.jpg', 'rb') as f:
+    with open(META_DATA['attachement'], 'rb') as f:
         msgImage = MIMEImage(f.read())
 
     msgImage.add_header('Content-ID', '<image1>')

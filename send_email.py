@@ -10,12 +10,14 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
+NoneType = type(None)
+
 
 with open('email_login.json') as f:
     LOGIN = json.load(f)
 
 
-def send_email(receiver, message):
+def send_email(receiver: str, message: str) -> NoneType:
     msgRoot = MIMEMultipart('related')
     msgRoot['From'] = 'Mère Noël \U0001f936'
     msgRoot['To'] = receiver

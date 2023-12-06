@@ -1,5 +1,10 @@
+from typing import List, Dict
+
 import json
 import random
+
+NoneType = type(None)
+Santa = Dict[str, str]
 
 
 with open("participants.json") as f:
@@ -9,6 +14,7 @@ with open("participants.json") as f:
 
 with open("exceptions.json") as f:
     _exceptions = json.load(f)
+
 
 EXCEPTIONS = {}
 for key, value in _exceptions.items():
@@ -21,7 +27,7 @@ for key, value in _exceptions.items():
     EXCEPTIONS[key] = value
 
 
-def choice(include, exclude):
+def choice(include: List[str], exclude: List[str]) -> str:
     choices = include.copy()
     for name in exclude:
         try:
@@ -33,13 +39,13 @@ def choice(include, exclude):
     return choices[0]
 
 
-def order_participant():
+def order_participant() -> List[str]:
     with_exce = sorted(list(EXCEPTIONS.keys()), reverse=True, key=lambda x: len(EXCEPTIONS[x]))
     no_exce = list(set(PARTCIPANTS) - set(with_exce))
     return with_exce + no_exce
 
 
-def attribute():
+def attribute() -> Santa:
     giver = order_participant()
     receiver = PARTCIPANTS.copy()
     santa = {}
@@ -53,29 +59,27 @@ def attribute():
     return santa
 
 
-def check_pairs(santa):
+def check_pairs(santa: Santa) -> bool:
     for key, value in santa.items():
         if santa[value] == key:
             return True
     return False
 
 
-def check_exceptions(santa):
+def check_exceptions(santa: Santa) -> bool:
     for key, value in santa.items():
         if value in EXCEPTIONS.get(key, []):
             return True
     return False
 
 
-def write_files(santa):
+def write_files(santa: Santa) -> NoneType:
     with open('message.txt') as f:
         message = f.read()
 
     for giver, receiver in santa.items():
         with open(f"packages/{giver}.txt", "w") as f:
             f.write(message.format(giver=giver.title(), receiver=receiver.title()))
-
-    return
 
 
 if __name__ == '__main__':
@@ -93,7 +97,7 @@ if __name__ == '__main__':
             exceptions = True
         i += 1
         if i > 1500:
-            print("Not OK with parirs restrictions")
+            print("Not OK with pairs restrictions")
             pairs = False
 
     write_files(santa)
